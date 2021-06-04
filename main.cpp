@@ -1,8 +1,8 @@
-// Program to find the parity of a given number
 #include <bits/stdc++.h>
 #include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
-
+//////////////////////////////////////////////////////////////////////// PARITY
 // Funcion para obtener la paridad de un numero
 bool ParityCheck(int x)
 {
@@ -18,6 +18,7 @@ bool ParityCheck(int x)
     return 0;
 }
 
+//////////////////////////////////////////////////////////////////////// CRC
 
 // XOR
 string XOR(string a, string b)
@@ -90,21 +91,112 @@ void codificarData(string data, string key)
          << codeword << "\n";
 }
 
+//////////////////////////////////////////////////////////////////////// HAMMING
+// Generar el Hamming code
+vector<int> generateHammingCode(
+    vector<int> msgBits, int m, int r)
+{
+    vector<int> hammingCode(r + m);
 
+    // Encuentra posiciones de bits redundantes
+    for (int i = 0; i < r; ++i) {
+
+        // Identificar bits redundantes marcandolos con -1
+
+        hammingCode[pow(2, i) - 1] = -1;
+    }
+
+    int j = 0;
+
+
+    for (int i = 0; i < (r + m); i++) {
+        //Coloca los bits del mensaje
+        if (hammingCode[i] != -1) {
+            hammingCode[i] = msgBits[j];
+            j++;
+        }
+    }
+
+    for (int i = 0; i < (r + m); i++) {
+
+        // Si el bit no es redundante, continua
+
+        if (hammingCode[i] != -1){
+            cout << hammingCode[i] << " no redundante, avanza" << endl;
+            continue;
+        } else {
+            cout << hammingCode[i] << " redundante" << endl;
+        }
+        int x = log2(i + 1);
+        int one_count = 0;
+
+        for (int j = i + 2;
+             j <= (r + m); ++j) {
+
+            if (j & (1 << x)) {
+                if (hammingCode[j - 1] == 1) {
+                    one_count++;
+                }
+            }
+        }
+
+        // Genera haming code para paridad Par
+        if (one_count % 2 == 0) {
+            hammingCode[i] = 0;
+        }
+        else {
+            hammingCode[i] = 1;
+        }
+    }
+
+    return hammingCode;
+}
+
+// Encuentra el hamming code
+void findHammingCode(vector<int>& msgBit)
+{
+    int m = msgBit.size();
+
+    // r es el numero de bits redudantes
+    int r = 1;
+
+    // Encontrar numero de bits redudantes
+    while (pow(2, r) < (m + r + 1)) {
+        r++;
+    }
+
+    // Genera el codigo
+    vector<int> ans
+        = generateHammingCode(msgBit, m, r);
+
+
+    cout << "Los Bits del mensaje son: ";
+    for (int i = 0; i < msgBit.size(); i++)
+        cout << msgBit[i] << " ";
+
+    cout << "\nEl Hamming code es: ";
+    for (int i = 0; i < ans.size(); i++)
+        cout << ans[i] << " ";
+}
+
+////////////////////////////////////////////////////////////////////// MAIN
 int main()
 {
     int opcion;
 
 
     do {
-        cout << "Seleccione cual de los tres algoritmos de deteccion de errores \ndesea ejemplificar: " << endl;
+        cout << "" << endl;
+        cout << "Seleccione cual de los tres algoritmos de deteccion o correccion de errores \ndesea ejemplificar: " << endl;
         cout << "1) CRC Code Generation" << endl;
         cout << "2) Parity Ceck" << endl;
+        cout << "3) Hamming Code" << endl;
+        cout << "4) Salir" << endl;
         cin >> opcion;
         switch (opcion) {
         case 1:
             cout << "CRC Code Generation seleccionado" << endl;
-            cout << "Seleccione 1 si quiere una demostracion de el caso de prueba key: 1101\nData inicial: 100100, o 2 si desea probar con diferentes valores." << endl;
+            cout << "Seleccione 1 si quiere una demostracion del caso de prueba key: 1101\nData inicial: 100100, o 2 si desea probar con diferentes valores." << endl;
             int opcionCRC;
             cin >> opcionCRC;
             if (opcionCRC == 1){
@@ -139,7 +231,7 @@ int main()
                                         cout << "Paridad de " << 8 << ": Odd (Impar)" << endl;
             } else {
                 int pruebaPC;
-                cout << "Ingrese un numero entero: " << endl;
+                cout << "Ingrese un numero entero " << endl;
                 cin >> pruebaPC;
                 (ParityCheck(pruebaPC)==0)?cout << "Paridad de " << pruebaPC << ": Even (Par)" << endl:
                                         cout << "Paridad de " << pruebaPC << ": Odd (Impar)" << endl;
@@ -147,6 +239,35 @@ int main()
             cout << "" << endl;
             break;
 
+        case 3:
+            cout << "Hamming Code Seleccionado" << endl;
+            cout << "Seleccione 1 si quiere una demostracion del caso de prueba mensaje: 0111, \no 2 si desea probar con un mensaje diferente.  " << endl;
+            int opcionHC;
+            cin >> opcionHC;
+            if (opcionHC == 1){
+                cout << "Ejecutando caso de prueba..." << endl;
+                vector<int> msgBit = { 0, 1, 1, 1 };
+                findHammingCode(msgBit);
+            } else {
+                int bitMsg1;
+                int bitMsg2;
+                int bitMsg3;
+                int bitMsg4;
+
+                cout << "Ingrese de uno en uno, los bits de un mensaje " << endl;
+                cin >> bitMsg1;
+
+                cin >> bitMsg2;
+
+                cin >> bitMsg3;
+
+                cin >> bitMsg4;
+                vector<int> msgBit = { bitMsg1, bitMsg2, bitMsg3, bitMsg4};
+
+                findHammingCode(msgBit);
+            }
+            cout << "" << endl;
+            break;
         case 5:
             opcion = 5;
             break;
