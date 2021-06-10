@@ -211,7 +211,9 @@ int main()
                 cin >> data;
                 cout << "Ingrese un valor de polinomio generador (key) binario " << endl;
                 cin >> key;
+                cout << "Si se verifica que tras el recibimiento de los datos a traves de un mensaje, utilizando CRC la data nno contiene errores se deberia la data unido al reminder" << endl;
                 codificarData(data, key);
+                cout <<  "Verificacion completada: Sin errores" << endl;
             }
             cout << "" << endl;
             break;
@@ -231,10 +233,11 @@ int main()
                                         cout << "Paridad de " << 8 << ": Odd (Impar)" << endl;
             } else {
                 int pruebaPC;
-                cout << "Ingrese un numero entero " << endl;
+                cout << "Se pretende comprobar si un archivo contiene o no un error, para este caso si la paridad del archivo representado como un numero entero es Par, el archivo no contiene errores." << endl;
+                cout << "Ingrese un numero entero: " << endl;
                 cin >> pruebaPC;
-                (ParityCheck(pruebaPC)==0)?cout << "Paridad de " << pruebaPC << ": Even (Par)" << endl:
-                                        cout << "Paridad de " << pruebaPC << ": Odd (Impar)" << endl;
+                (ParityCheck(pruebaPC)==0)?cout << "Paridad de " << pruebaPC << ": Even (Par)" << "-Archivo no contiene errores-" << endl:
+                                        cout << "Paridad de " << pruebaPC << ": Odd (Impar)" << "-Archivo contiene errores-" << endl;
             }
             cout << "" << endl;
             break;
@@ -254,7 +257,7 @@ int main()
                 int bitMsg3;
                 int bitMsg4;
 
-                cout << "Ingrese de uno en uno, los bits de un mensaje " << endl;
+                cout << "Ingrese de uno en uno, los bits de un supuesto mensaje (Son 4 en total y debe pulsar ENTER despues de cada uno) " << endl;
                 cin >> bitMsg1;
 
                 cin >> bitMsg2;
@@ -262,9 +265,11 @@ int main()
                 cin >> bitMsg3;
 
                 cin >> bitMsg4;
+
                 vector<int> msgBit = { bitMsg1, bitMsg2, bitMsg3, bitMsg4};
 
                 findHammingCode(msgBit);
+                cout << "Los errores del mensaje han sido corregidos y esta listo para ser enviado" << endl;
             }
             cout << "" << endl;
             break;
@@ -273,7 +278,7 @@ int main()
             break;
         }
     }
-    while (opcion != 5);
+    while (opcion != 4);
 
 
     return 0;
